@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeffrey C. Anyanwu — Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10141A;
+    --bg-raised: #171C24;
+    --border: #262E39;
+    --text: #E7E5E0;
+    --text-dim: #8B95A3;
+    --accent: #5FBEA8;
+    --accent-dim: #3E7D70;
+    --amber: #E0A458;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+
+  ::selection{ background:var(--accent-dim); color:#fff; }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  .wrap{ max-width:920px; margin:0 auto; padding:0 28px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(16,20,26,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:60px;
+  }
+  .brand{
+    font-family:var(--mono); font-size:14px; font-weight:600; color:var(--text);
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand .dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); display:inline-block; }
+  .navlinks{ display:flex; gap:28px; font-family:var(--mono); font-size:13px; color:var(--text-dim); }
+  .navlinks a:hover{ color:var(--accent); }
+  .navtoggle{ display:none; background:none; border:1px solid var(--border); color:var(--text); font-family:var(--mono); font-size:12px; padding:6px 10px; border-radius:4px; cursor:pointer; }
+
+  @media (max-width:640px){
+    .navlinks{ display:none; }
+    .navtoggle{ display:block; }
+    .navlinks.open{
+      display:flex; position:absolute; top:60px; left:0; right:0;
+      flex-direction:column; background:var(--bg-raised); padding:16px 28px; gap:14px;
+      border-bottom:1px solid var(--border);
+    }
+  }
+
+  /* HERO */
+  .hero{
+    padding:100px 0 80px;
+    border-bottom:1px solid var(--border);
+    position:relative;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:13px; color:var(--accent);
+    letter-spacing:0.04em; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--accent-dim); display:inline-block; }
+  h1{
+    font-family:var(--mono); font-size:clamp(32px,6vw,52px); font-weight:700;
+    line-height:1.15; letter-spacing:-0.01em; margin-bottom:20px;
+  }
+  h1 .accent{ color:var(--accent); }
+  .lede{
+    font-size:17px; color:var(--text-dim); max-width:520px; margin-bottom:32px;
+  }
+  .lede strong{ color:var(--text); font-weight:600; }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:11px 20px; border-radius:5px;
+    border:1px solid var(--border); transition:all .15s ease;
+  }
+  .btn.primary{ background:var(--accent); color:#0A0D11; border-color:var(--accent); font-weight:600; }
+  .btn.primary:hover{ background:#72cbb6; }
+  .btn.ghost{ color:var(--text); }
+  .btn.ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  .terminal{
+    margin-top:56px; background:var(--bg-raised); border:1px solid var(--border);
+    border-radius:8px; overflow:hidden; font-family:var(--mono); font-size:13px;
+    max-width:560px;
+  }
+  .terminal-bar{
+    display:flex; gap:6px; padding:10px 14px; border-bottom:1px solid var(--border);
+  }
+  .terminal-bar span{ width:10px; height:10px; border-radius:50%; background:#3A414D; }
+  .terminal-body{ padding:16px 18px; color:var(--text-dim); }
+  .terminal-body .prompt{ color:var(--accent); }
+  .terminal-body .out{ color:var(--text); }
+  .cursor{ display:inline-block; width:7px; height:14px; background:var(--accent); vertical-align:middle; animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* SECTION shared */
+  section{ padding:70px 0; border-bottom:1px solid var(--border); }
+  .section-label{
+    font-family:var(--mono); font-size:12px; color:var(--text-dim); letter-spacing:0.08em;
+    margin-bottom:8px; text-transform:uppercase;
+  }
+  h2{ font-family:var(--mono); font-size:26px; margin-bottom:36px; font-weight:600; }
+
+  /* SKILLS */
+  .skill-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  @media (max-width:640px){ .skill-grid{ grid-template-columns:1fr; } }
+  .skill-card{
+    border:1px solid var(--border); border-radius:8px; padding:20px 22px; background:var(--bg-raised);
+  }
+  .skill-card h3{
+    font-family:var(--mono); font-size:13px; color:var(--amber); margin-bottom:12px; letter-spacing:0.03em;
+  }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:var(--mono); font-size:12.5px; background:#1C222C; border:1px solid var(--border);
+    padding:5px 10px; border-radius:5px; color:var(--text);
+  }
+
+  /* PROJECTS */
+  .project{
+    border:1px solid var(--border); border-radius:10px; background:var(--bg-raised);
+    padding:28px 30px; margin-bottom:22px;
+  }
+  .project-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .project h3{ font-family:var(--mono); font-size:17px; font-weight:600; }
+  .project .tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); border:1px solid var(--accent-dim); padding:3px 9px; border-radius:20px; }
+  .project ul{ margin:14px 0 0 20px; color:var(--text-dim); font-size:14.5px; }
+  .project li{ margin-bottom:7px; }
+  .project li::marker{ color:var(--accent); }
+
+  /* ERD signature diagram */
+  .erd{
+    margin-top:22px; padding:22px 18px; border:1px dashed var(--border); border-radius:8px;
+    background:#0D1116;
+  }
+  .erd-caption{ font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-top:14px; text-align:center; }
+  .erd svg{ width:100%; height:auto; display:block; }
+  .erd-node rect{ fill:#161B22; stroke:#33404D; stroke-width:1; }
+  .erd-node.lead rect{ stroke:var(--accent); stroke-width:1.5; }
+  .erd-node text{ fill:var(--text); font-family:'IBM Plex Mono', monospace; }
+  .erd-node .table-name{ fill:var(--amber); font-weight:600; }
+  .erd-node.lead .table-name{ fill:var(--accent); }
+  .erd line{ stroke:#33404D; stroke-width:1.3; }
+
+  /* EXPERIENCE */
+  .job{ display:grid; grid-template-columns:160px 1fr; gap:20px; padding:20px 0; border-top:1px solid var(--border); }
+  .job:first-of-type{ border-top:none; }
+  .job-date{ font-family:var(--mono); font-size:12.5px; color:var(--text-dim); padding-top:2px; }
+  .job h3{ font-size:16px; font-weight:600; margin-bottom:8px; }
+  .job ul{ margin:0 0 0 18px; color:var(--text-dim); font-size:14.5px; }
+  .job li{ margin-bottom:6px; }
+  .job li::marker{ color:var(--amber); }
+  @media (max-width:640px){ .job{ grid-template-columns:1fr; gap:6px; } }
+
+  /* EDUCATION */
+  .edu-card{
+    border:1px solid var(--border); border-radius:8px; background:var(--bg-raised);
+    padding:24px 26px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .edu-card h3{ font-size:16px; font-weight:600; margin-bottom:4px; }
+  .edu-card .sub{ color:var(--text-dim); font-size:14px; }
+  .edu-meta{ font-family:var(--mono); font-size:13px; color:var(--text-dim); text-align:right; }
+  .edu-meta strong{ color:var(--accent); display:block; }
+
+  /* CONTACT / FOOTER */
+  footer{ padding:70px 0 60px; text-align:center; }
+  footer h2{ margin-bottom:14px; }
+  footer p{ color:var(--text-dim); max-width:420px; margin:0 auto 30px; }
+  .contact-row{ display:flex; justify-content:center; gap:20px; flex-wrap:wrap; font-family:var(--mono); font-size:13.5px; }
+  .contact-row a{ color:var(--text); border-bottom:1px solid var(--border); padding-bottom:2px; transition:color .15s, border-color .15s; }
+  .contact-row a:hover{ color:var(--accent); border-color:var(--accent); }
+  .fine{ margin-top:50px; font-family:var(--mono); font-size:11.5px; color:#4C5560; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>jeffrey.anyanwu</div>
+    <div class="navlinks" id="navlinks">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#projects">projects</a>
+      <a href="#experience">experience</a>
+      <a href="#contact">contact</a>
+    </div>
+    <button class="navtoggle" id="navtoggle" aria-label="Toggle navigation">menu</button>
+  </div>
+</nav>
+
+<header class="hero" id="about">
+  <div class="wrap">
+    <div class="eyebrow">SOFTWARE DEVELOPMENT · ATLANTA, GA</div>
+    <h1>Jeffrey C.<br>Any<span class="accent">an</span>wu</h1>
+    <p class="lede">
+      IT / Software Development student at Georgia Gwinnett College, building
+      <strong>web applications, Java &amp; Python tools, and relational databases</strong>
+      — while running real-world operations day to day.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="#projects">View projects</a>
+      <a class="btn ghost" href="#contact">Get in touch</a>
+    </div>
+
+    <div class="terminal" aria-hidden="true">
+      <div class="terminal-bar"><span></span><span></span><span></span></div>
+      <div class="terminal-body">
+        <div><span class="prompt">$</span> whoami</div>
+        <div class="out">jeffrey_anyanwu — B.S. Information Technology, 2027</div>
+        <div style="margin-top:8px;"><span class="prompt">$</span> cat skills.txt</div>
+        <div class="out">Java · Python · JavaScript · SQL · Git</div>
+        <div style="margin-top:8px;"><span class="prompt">$</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="education">
+  <div class="wrap">
+    <div class="section-label">Education</div>
+    <h2>Currently studying</h2>
+    <div class="edu-card">
+      <div>
+        <h3>Georgia Gwinnett College</h3>
+        <div class="sub">B.S. Information Technology — Software Development · Lawrenceville, GA</div>
+      </div>
+      <div class="edu-meta">
+        <strong>GPA 3.42</strong>
+        Major GPA 3.75<br>Expected 2027
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-label">Toolkit</div>
+    <h2>Technical skills</h2>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <h3>LANGUAGES</h3>
+        <div class="chip-row">
+          <span class="chip">Java</span><span class="chip">Python</span>
+          <span class="chip">JavaScript</span><span class="chip">HTML5</span><span class="chip">CSS3</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>CONCEPTS</h3>
+        <div class="chip-row">
+          <span class="chip">OOP</span><span class="chip">Data Structures</span><span class="chip">Algorithms</span>
+          <span class="chip">Debugging</span><span class="chip">SDLC</span><span class="chip">File Processing</span>
+          <span class="chip">DB Design</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>TOOLS</h3>
+        <div class="chip-row">
+          <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">VS Code</span>
+          <span class="chip">MySQL Workbench</span><span class="chip">Cisco Packet Tracer</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>SYSTEMS</h3>
+        <div class="chip-row">
+          <span class="chip">Windows (Advanced)</span><span class="chip">Linux</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-label">Selected work</div>
+    <h2>Projects</h2>
+
+    <div class="project">
+      <div class="project-head">
+        <h3><a href="https://janyanwu2.domains.ggc.edu/" target="_blank" rel="noopener" style="border-bottom:1px solid var(--accent-dim);">Multi-Page Responsive Web Application ↗</a></h3>
+        <span class="tag">HTML · CSS · JS</span>
+      </div>
+      <ul>
+        <li>Developed responsive web applications using HTML, CSS, and JavaScript to improve usability across desktop and mobile devices</li>
+        <li>Managed source code and collaborated on projects using GitHub version control workflows</li>
+      </ul>
+    </div>
+
+    <div class="project">
+      <div class="project-head">
+        <h3>Router, Switch &amp; Server Configuration</h3>
+        <span class="tag">CISCO PACKET TRACER</span>
+      </div>
+      <ul>
+        <li>Configured routers, subnetting, and IP addressing environments</li>
+        <li>Troubleshot connectivity and networking issues within simulated enterprise environments</li>
+        <li>Documented network configurations and test results to support lab reporting requirements</li>
+      </ul>
+    </div>
+
+    <div class="project">
+      <div class="project-head">
+        <h3>League of Legends Esports Tournament Database</h3>
+        <span class="tag">MYSQL WORKBENCH · ERD</span>
+      </div>
+      <ul>
+        <li>Co-designed and implemented a relational database tracking teams, players, regions, tournaments, and standings across a 5-table schema</li>
+        <li>Led design and implementation of the Tournament Standings sub-domain, replacing manual spreadsheet tracking with automated ranking and results reporting</li>
+        <li>Built queries supporting key reports: standings by tournament, rosters filtered by region, and champion rosters for awards/sponsorship</li>
+        <li>Partnered in a 2-person team with a structured equity matrix and recorded weekly design meetings</li>
+      </ul>
+
+      <div class="erd" role="img" aria-label="Simplified entity relationship diagram of the esports database schema">
+        <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg">
+          <!-- connectors -->
+          <line x1="115" y1="60" x2="115" y2="150"/>
+          <line x1="115" y1="150" x2="230" y2="150"/>
+          <line x1="345" y1="150" x2="230" y2="150"/>
+          <line x1="345" y1="150" x2="345" y2="60"/>
+          <line x1="345" y1="150" x2="475" y2="150"/>
+          <line x1="475" y1="150" x2="475" y2="60"/>
+
+          <!-- REGIONS -->
+          <g class="erd-node">
+            <rect x="55" y="16" width="120" height="44" rx="5"/>
+            <text x="115" y="34" font-size="11" text-anchor="middle" class="table-name">REGIONS</text>
+            <text x="115" y="49" font-size="9.5" text-anchor="middle" opacity="0.7">regionId, name</text>
+          </g>
+
+          <!-- TEAMS -->
+          <g class="erd-node">
+            <rect x="170" y="130" width="120" height="44" rx="5"/>
+            <text x="230" y="148" font-size="11" text-anchor="middle" class="table-name">TEAMS</text>
+            <text x="230" y="163" font-size="9.5" text-anchor="middle" opacity="0.7">teamId, regionId</text>
+          </g>
+
+          <!-- PLAYERS -->
+          <g class="erd-node">
+            <rect x="285" y="130" width="120" height="44" rx="5"/>
+            <text x="345" y="148" font-size="11" text-anchor="middle" class="table-name">PLAYERS</text>
+            <text x="345" y="163" font-size="9.5" text-anchor="middle" opacity="0.7">playerId, teamId</text>
+          </g>
+
+          <!-- TOURNAMENTS -->
+          <g class="erd-node">
+            <rect x="285" y="16" width="120" height="44" rx="5"/>
+            <text x="345" y="34" font-size="11" text-anchor="middle" class="table-name">TOURNAMENTS</text>
+            <text x="345" y="49" font-size="9.5" text-anchor="middle" opacity="0.7">tournamentId</text>
+          </g>
+
+          <!-- STANDINGS (lead) -->
+          <g class="erd-node lead">
+            <rect x="415" y="130" width="130" height="44" rx="5"/>
+            <text x="480" y="148" font-size="11" text-anchor="middle" class="table-name">STANDINGS</text>
+            <text x="480" y="163" font-size="9.5" text-anchor="middle" opacity="0.7">tournamentId, teamId</text>
+          </g>
+
+          <g class="erd-node lead">
+            <rect x="415" y="16" width="130" height="44" rx="5"/>
+            <text x="480" y="34" font-size="11" text-anchor="middle" class="table-name">RANK</text>
+            <text x="480" y="49" font-size="9.5" text-anchor="middle" opacity="0.7">wins, losses</text>
+          </g>
+          <line x1="480" y1="60" x2="480" y2="130"/>
+        </svg>
+        <div class="erd-caption">Simplified schema — Jeffrey's lead sub-domain highlighted</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-label">Track record</div>
+    <h2>Experience</h2>
+
+    <div class="job">
+      <div class="job-date">2025 — Present</div>
+      <div>
+        <h3>Inventory Control Manager · APL Logistics</h3>
+        <ul>
+          <li>Direct inventory operations and maintain accurate stock tracking across warehouse systems</li>
+          <li>Analyze inventory discrepancies and resolve operational issues to improve workflow efficiency and data accuracy</li>
+          <li>Coordinate with cross-functional teams to streamline inventory processes and support daily warehouse operations</li>
+          <li>Implement process improvements that reduced stock errors and increased reporting accuracy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="job-date">2023 — 2025</div>
+      <div>
+        <h3>Restaurant Manager</h3>
+        <ul>
+          <li>Supervised daily operations including employee scheduling, training, and customer service management</li>
+          <li>Monitored inventory and supply tracking processes to support operational efficiency and cost control</li>
+          <li>Resolved customer concerns and operational challenges within fast-paced service environments</li>
+          <li>Improved team productivity through onboarding initiatives and staff development programs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="section-label" style="text-align:center;">Get in touch</div>
+    <h2>Let's build something</h2>
+    <p>Open to internship and entry-level software development opportunities.</p>
+    <div class="contact-row">
+      <a href="mailto:anyjeff856@gmail.com">anyjeff856@gmail.com</a>
+      <a href="tel:+16786978679">(678) 697-8679</a>
+      <a href="https://linkedin.com/in/jeffrey-anyanwu-316692266" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <div class="fine">Atlanta, GA</div>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('navtoggle');
+  const links = document.getElementById('navlinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+</script>
+
+</body>
+</html>
